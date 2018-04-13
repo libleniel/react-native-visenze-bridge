@@ -28,6 +28,7 @@
   "keywords": [
     "react-native"
   ],
+<<<<<<< HEAD
   "license": "",
   "main": "index.js",
   "name": "react-native-visenze-bridge",
@@ -86,3 +87,8 @@
     "vm": "vm-browserify"
   }
 }
+=======
+  "author": "",
+  "license": ""
+}
+>>>>>>> 473e839ceba2af8ea4f1aa62957e9398de8627e1
