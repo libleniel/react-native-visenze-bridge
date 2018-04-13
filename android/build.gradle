@@ -24,6 +24,7 @@ android {
     lintOptions {
         abortOnError false
     }
+
 }
 
 repositories {
@@ -32,5 +33,6 @@ repositories {
 
 dependencies {
     compile 'com.facebook.react:react-native:+'
+    compile 'com.visenze:visearch-android:1.2.1'
 }
   
