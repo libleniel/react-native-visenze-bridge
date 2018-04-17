@@ -1,15 +1,28 @@
 package com.rbzlib;
 
 import android.util.Log;
+import android.net.Uri;
 import com.facebook.react.bridge.UiThreadUtil;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableMap;
 
+import com.visenze.visearch.android.BaseSearchParams;
+import com.visenze.visearch.android.ColorSearchParams;
 import com.visenze.visearch.android.IdSearchParams;
 import com.visenze.visearch.android.ResultList;
+import com.visenze.visearch.android.TrackParams;
+import com.visenze.visearch.android.UploadSearchParams;
 import com.visenze.visearch.android.ViSearch;
+import com.visenze.visearch.android.model.Image;
+import com.visenze.visearch.android.model.ImageResult;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONArray;
 
 import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
 
@@ -32,12 +45,6 @@ public class RNVisenzeBridgeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void test() {
-        Log.d("RNVisenzeBridge", "RNVisenzeBridge.test is called");
-        return;
-    }
-
-    @ReactMethod
     public void start(final String appkey) {
         UiThreadUtil.runOnUiThread(new Runnable() {
             @Override
@@ -47,10 +54,17 @@ public class RNVisenzeBridgeModule extends ReactContextBaseJavaModule {
                 visearchListener = new ViSearch.ResultListener() {
                     @Override
                     public void onSearchResult(ResultList resultList) {
-                        RCTNativeAppEventEmitter eventEmitter = getReactApplicationContext().getJSModule(RCTNativeAppEventEmitter.class);
-                        eventEmitter.emit(VISENZE_RESULT_EVENT, "HALO MAS " + resultList.getImageList().get(0).getImageName());
-                        Log.i(ModuleName, "Search Success");
-                        Log.i("search result", resultList.getImageList().get(0).getImageName());
+                        JSONArray data = new JSONArray();
+                        for (ImageResult imageResult : resultList.getImageList()) {
+                            JSONObject jsonImage = new JSONObject(imageResult.getMetaData());
+                            data.put(jsonImage);
+                        }
+                        try {
+                            RCTNativeAppEventEmitter eventEmitter = getReactApplicationContext().getJSModule(RCTNativeAppEventEmitter.class);
+                            eventEmitter.emit(VISENZE_RESULT_EVENT, JsonConvert.jsonToReact(data));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override
@@ -73,56 +87,87 @@ public class RNVisenzeBridgeModule extends ReactContextBaseJavaModule {
         UiThreadUtil.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                // ViSearch viSearch = getViSearchInstance(reactContext);
-                // if (null != screen) {
-                    Log.d("RNVisenzeBridge", "searchById is called " + id);
-                    // viSearch.setListener(new ViSearch.ResultListener() {
-                    //     @Override
-                    //     public void onSearchResult(ResultList resultList) {
-                    //         Log.i("search result", "suksess");
-                    //         Log.i("search result", resultList.getImageList().get(0).getImageName());
-                    //     }
-            
-                    //     @Override
-                    //     public void onSearchError(String errorMessage) {
-                    //         Log.i("search error", "faul");
-                    //     }
-            
-                    //     @Override
-                    //     public void onSearchCanceled() {
-                    //         Log.i("search cancel", "fail");
-                    //     }
-                    // });
-                    IdSearchParams idSearchParams = new IdSearchParams(id);
-                    viSearch.idSearch(idSearchParams);
-                // }
+                BaseSearchParams baseSearchParams = new BaseSearchParams();
+                baseSearchParams.setGetAllFl(true);
+                IdSearchParams idSearchParams = new IdSearchParams(id);
+                idSearchParams.setBaseSearchParams(baseSearchParams);
+                viSearch.idSearch(idSearchParams);
             }
         });
     }
 
-    //Search Results Go Here
+    @ReactMethod
+    public void searchByUrl(final String url, final String limitDetection){
+        UiThreadUtil.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                BaseSearchParams baseSearchParams = new BaseSearchParams();
+                baseSearchParams.setGetAllFl(true);
+                UploadSearchParams  uploadSearchParams = new UploadSearchParams(url);
+                uploadSearchParams.setDetection(limitDetection);
+                uploadSearchParams.setBaseSearchParams(baseSearchParams);
+                viSearch.uploadSearch(uploadSearchParams);
+            }
+        });
+    }
 
+    @ReactMethod
+    public void searchByPath(final String path, final String limitDetection){
+        UiThreadUtil.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Image image = new Image(path, Image.ResizeSettings.STANDARD);
+                BaseSearchParams baseSearchParams = new BaseSearchParams();
+                baseSearchParams.setGetAllFl(true);
+                UploadSearchParams  uploadSearchParams = new UploadSearchParams();
+                uploadSearchParams.setImage(image);
+                uploadSearchParams.setDetection(limitDetection);
+                uploadSearchParams.setBaseSearchParams(baseSearchParams);
+                viSearch.uploadSearch(uploadSearchParams);
+            }
+        });
+    }
 
+    @ReactMethod
+    public void searchByUri(final String uri, final String limitDetection){
+        UiThreadUtil.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Image image = new Image(reactContext, Uri.parse(uri), Image.ResizeSettings.STANDARD);
+                BaseSearchParams baseSearchParams = new BaseSearchParams();
+                baseSearchParams.setGetAllFl(true);
+                UploadSearchParams  uploadSearchParams = new UploadSearchParams();
+                uploadSearchParams.setImage(image);
+                uploadSearchParams.setDetection(limitDetection);
+                uploadSearchParams.setBaseSearchParams(baseSearchParams);
+                viSearch.uploadSearch(uploadSearchParams);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void searchByColor(final String hexString){
+        UiThreadUtil.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                BaseSearchParams baseSearchParams = new BaseSearchParams();
+                baseSearchParams.setGetAllFl(true);
+                ColorSearchParams colorSearchParams = new ColorSearchParams(hexString);
+                colorSearchParams.setBaseSearchParams(baseSearchParams);
+                viSearch.colorSearch(colorSearchParams);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void trackSearchResultClickEvent(final String imageName, final String requestID){
+        UiThreadUtil.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                viSearch.track(new TrackParams()
+                    .setAction("click").setImName(imageName)
+                    .setReqid(requestID));
+            }
+        });
+    }
 }
-
-
-
-// import com.facebook.react.bridge.ReactApplicationContext;
-// import com.facebook.react.bridge.ReactContextBaseJavaModule;
-// import com.facebook.react.bridge.ReactMethod;
-// import com.facebook.react.bridge.Callback;
-
-// public class RNVisenzeBridgeModule extends ReactContextBaseJavaModule {
-
-//   private final ReactApplicationContext reactContext;
-
-//   public RNVisenzeBridgeModule(ReactApplicationContext reactContext) {
-//     super(reactContext);
-//     this.reactContext = reactContext;
-//   }
-
-//   @Override
-//   public String getName() {
-//     return "RNVisenzeBridge";
-//   }
-// }
