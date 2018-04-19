@@ -41,7 +41,7 @@ import VisenzeApi from 'react-native-visenze-bridge';
 ```
 
 ### Start/init The ViSearch SDK
-Before we do search, We need to start the visearch sdk. You can get your `APP_KEY` from ViSenze dashboard.
+Before we use the SDK, We need to start/init the visearch sdk. You can get your `APP_KEY` from ViSenze dashboard.
 ```javascript
 VisenzeApi.start("APP_KEY")
 ```
@@ -88,12 +88,20 @@ VisenzeApi.searchByUrl("000000", (result) => {
     //get the metadata result here, which is in array format
 }, "bag");
 ```
-Currently Supported Limitation Item : `top`, `dress`, `bottom`, `shoe`, `bag`, `watch` and `indian ethnic wear`. 
-If you didn't specify the limit, then it will use `all` as default.
+Currently support these item : 
+- `top`
+- `dress` 
+- `bottom`
+- `shoe`
+- `bag`
+- `watch` 
+- and `indian ethnic wear`
+
+**NOTE**: If you didn't specify what to limit, then it will use `all` as default.
 
 
 ## Tracking
-Track Event
+Track Event of clicked search result from the SDK.
 ```javascript
 VisenzeApi.trackSearchResultClickEvent("IMAGE_NAME", "REQUEST_ID");
 ```
