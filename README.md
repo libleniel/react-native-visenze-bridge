@@ -36,6 +36,7 @@
 
 
 ## Usage
+Import the `react-native-visenze-bridge`
 ```javascript
 import VisenzeApi from 'react-native-visenze-bridge';
 ```
