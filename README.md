@@ -86,7 +86,7 @@ VisenzeApi.searchByColor("000000", (result) => {
 // This will limit the search to a certain object which is 'bag'
 VisenzeApi.searchByUrl("https://static.independent.co.uk/s3fs-public/thumbnails/image/2017/03/01/11/spring-handbags-lifestyle.jpg", (result) => {
     //get the metadata result here, which is in array format
-}, **"bag"**);
+}, "bag"); // Specify the limit here
 ```
 Currently support these item : 
 - `top`
