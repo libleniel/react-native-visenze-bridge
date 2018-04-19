@@ -47,28 +47,28 @@ VisenzeApi.start("APP_KEY")
 ```
 
 ### Search Similar Images
-1. Search similar image based on its ID:
+**1. Search similar image based on its ID:**
 ```javascript
 VisenzeApi.searchById("INSERT_ID_HERE", (result) => {
     //get the metadata result here, which is in array format
 });
 ```
 
-2. Search similar image based by URL:
+**2. Search similar image based by URL:**
 ```javascript
 VisenzeApi.searchByUrl("INSERT_URL_HERE", (result) => {
     //get the metadata result here, which is in array format
 });
 ```
 
-3. Search similar image based by local Path:
+**3. Search similar image based by local Path:**
 ```javascript
 VisenzeApi.searchByPath("INSERT_PATH_HERE", (result) => {
     //get the metadata result here, which is in array format
 });
 ```
 
-4. Search similar image using color:
+**4. Search similar image using color:**
 ```javascript
 VisenzeApi.searchByColor("INSERT_HEX_COLOR_STRING HERE", (result) => {
     //get the metadata result here, which is in array format
@@ -81,12 +81,12 @@ VisenzeApi.searchByColor("000000", (result) => {
 });
 ```
 
-5. Limit Search to a certain object in the image:
+**5. Limit Search to a certain object in the image:**
 ```javascript
 // This will limit the search to a certain object which is 'bag'
-VisenzeApi.searchByUrl("000000", (result) => {
+VisenzeApi.searchByUrl("https://static.independent.co.uk/s3fs-public/thumbnails/image/2017/03/01/11/spring-handbags-lifestyle.jpg", (result) => {
     //get the metadata result here, which is in array format
-}, "bag");
+}, **"bag"**);
 ```
 Currently support these item : 
 - `top`
