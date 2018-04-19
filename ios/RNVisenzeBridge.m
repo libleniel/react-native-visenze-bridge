@@ -15,16 +15,6 @@ RCT_EXPORT_MODULE()
 RCT_EXPORT_METHOD(start:(NSString *)appKey) {
     [ViSearchAPI setupAppKey:appKey];
     ViSearchClient *client = [ViSearchAPI defaultClient];
-    
-//    SearchParams *searchParams = [[SearchParams alloc] init];
-//    searchParams.imName = @"11013040_ae";
-//
-//    [[ViSearchAPI defaultClient] searchWithImageId:searchParams success:^(NSInteger statusCode, ViSearchResult *data, NSError *error) {
-//         NSLog(@"Result %@", data);
-//         // Do something when request succeeds
-//     } failure:^(NSInteger statusCode, ViSearchResult *data, NSError *error) {
-//         // Do something when request fails
-//     }];
 };
 
 - (NSString *)getEventName {
@@ -40,28 +30,36 @@ RCT_EXPORT_METHOD(start:(NSString *)appKey) {
 RCT_EXPORT_METHOD(searchById:(NSString *)id) {
     SearchParams *searchParams = [[SearchParams alloc] init];
     searchParams.imName = id;
+    searchParams.getAllFl = true;
     
     [[ViSearchAPI defaultClient] searchWithImageId:searchParams success:^(NSInteger statusCode, ViSearchResult *data, NSError *error) {
-        NSLog(@"Result-ID %@", data);
-        // Do something when request succeeds
+        NSMutableArray *metaDataDict = [[NSMutableArray alloc] init];
+        for (ImageResult *result in data.imageResultsArray) {
+            [metaDataDict addObject:result.metadataDictionary];
+        }
+        [self sendEventWithName:[self getEventName]
+                           body:metaDataDict];
     } failure:^(NSInteger statusCode, ViSearchResult *data, NSError *error) {
-        // Do something when request fails
     }];
 };
 
 RCT_EXPORT_METHOD(searchByUrl:(NSString *)url limitDetection:(NSString *)value) {
     UploadSearchParams *uploadSearchParams = [[UploadSearchParams alloc] init];
     uploadSearchParams.imageUrl = url;
+    uploadSearchParams.getAllFl = true;
     uploadSearchParams.detection = value;
     uploadSearchParams.settings = [ImageSettings defaultSettings];
     
     [[ViSearchAPI defaultClient]
      searchWithImageUrl:uploadSearchParams
      success:^(NSInteger statusCode, ViSearchResult *data, NSError *error) {
-         NSLog(@"Result-URL %@", data);
-         // Do something when request succeeds
+         NSMutableArray *metaDataDict = [[NSMutableArray alloc] init];
+         for (ImageResult *result in data.imageResultsArray) {
+             [metaDataDict addObject:result.metadataDictionary];
+         }
+         [self sendEventWithName:[self getEventName]
+                            body:metaDataDict];
      } failure:^(NSInteger statusCode, ViSearchResult *data, NSError *error) {
-         // Do something when request fails
      }];
 };
 
@@ -70,16 +68,20 @@ RCT_EXPORT_METHOD(searchByPath:(NSString *)path limitDetection:(NSString *)value
     
     UploadSearchParams *uploadSearchParams = [[UploadSearchParams alloc] init];
     uploadSearchParams.imageFile = image;
+    uploadSearchParams.getAllFl = true;
     uploadSearchParams.detection = value;
     uploadSearchParams.settings = [ImageSettings defaultSettings];
     
     [[ViSearchAPI defaultClient]
      searchWithImageData:uploadSearchParams
      success:^(NSInteger statusCode, ViSearchResult *data, NSError *error) {
-         NSLog(@"Result-Path %@", data);
-         // Do something when request succeeds
+         NSMutableArray *metaDataDict = [[NSMutableArray alloc] init];
+         for (ImageResult *result in data.imageResultsArray) {
+             [metaDataDict addObject:result.metadataDictionary];
+         }
+         [self sendEventWithName:[self getEventName]
+                            body:metaDataDict];
      } failure:^(NSInteger statusCode, ViSearchResult *data, NSError *error) {
-         // Do something when request fails
      }];
 };
 
@@ -90,14 +92,18 @@ RCT_EXPORT_METHOD(searchByUri:(NSString *)uri limitDetection:(NSString *)value) 
 RCT_EXPORT_METHOD(searchByColor:(NSString *)hexString) {
     ColorSearchParams *colorSearchParams = [[ColorSearchParams alloc] init];
     colorSearchParams.color = hexString;
+    colorSearchParams.getAllFl = true;
     
     [[ViSearchAPI defaultClient]
      searchWithColor:colorSearchParams
      success:^(NSInteger statusCode, ViSearchResult *data, NSError *error) {
-         NSLog(@"Result-Color %@", data);
-         // Do something when request succeeds
+         NSMutableArray *metaDataDict = [[NSMutableArray alloc] init];
+         for (ImageResult *result in data.imageResultsArray) {
+             [metaDataDict addObject:result.metadataDictionary];
+         }
+         [self sendEventWithName:[self getEventName]
+                            body:metaDataDict];
      } failure:^(NSInteger statusCode, ViSearchResult *data, NSError *error) {
-         // Do something when request fails
      }];
 };
 
