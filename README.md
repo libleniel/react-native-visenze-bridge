@@ -37,9 +37,63 @@
 
 ## Usage
 ```javascript
-import RNVisenzeBridge from 'react-native-visenze-bridge';
-
-// TODO: What to do with the module?
-RNVisenzeBridge;
+import VisenzeApi from 'react-native-visenze-bridge';
 ```
-  
+
+### Start/init The ViSearch SDK
+Before we do search, We need to start the visearch sdk. You can get your `APP_KEY` from ViSenze dashboard.
+```javascript
+VisenzeApi.start("APP_KEY")
+```
+
+### Search Similar Images
+1. Search similar image based on its ID:
+```javascript
+VisenzeApi.searchById("INSERT_ID_HERE", (result) => {
+    //get the metadata result here, which is in array format
+});
+```
+
+2. Search similar image based by URL:
+```javascript
+VisenzeApi.searchByUrl("INSERT_URL_HERE", (result) => {
+    //get the metadata result here, which is in array format
+});
+```
+
+3. Search similar image based by local Path:
+```javascript
+VisenzeApi.searchByPath("INSERT_PATH_HERE", (result) => {
+    //get the metadata result here, which is in array format
+});
+```
+
+4. Search similar image using color:
+```javascript
+VisenzeApi.searchByColor("INSERT_HEX_COLOR_STRING HERE", (result) => {
+    //get the metadata result here, which is in array format
+});
+```
+Example:
+```javascript
+VisenzeApi.searchByColor("000000", (result) => {
+    //get the metadata result here, which is in array format
+});
+```
+
+5. Limit Search to a certain object in the image:
+```javascript
+// This will limit the search to a certain object which is 'bag'
+VisenzeApi.searchByUrl("000000", (result) => {
+    //get the metadata result here, which is in array format
+}, "bag");
+```
+Currently Supported Limitation Item : `top`, `dress`, `bottom`, `shoe`, `bag`, `watch` and `indian ethnic wear`. 
+If you didn't specify the limit, then it will use `all` as default.
+
+
+## Tracking
+Track Event
+```javascript
+VisenzeApi.trackSearchResultClickEvent("IMAGE_NAME", "REQUEST_ID");
+```
