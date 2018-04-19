@@ -3,6 +3,7 @@
 
 ## Getting started
 **This lib is not available on npmjs yet, so you need to add manually to the `package.json` of your projects before installing**
+
 `$ npm install react-native-visenze-bridge --save`
 
 ### Mostly automatic installation
