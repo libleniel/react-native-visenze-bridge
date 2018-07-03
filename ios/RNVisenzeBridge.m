@@ -21,7 +21,6 @@ RCT_EXPORT_METHOD(start:(NSString *)appKey) {
     return @"VisenzeResultEvent";
 }
 
-
 - (NSArray<NSString *> *)supportedEvents {
     return @[[self getEventName]];
 }
@@ -85,8 +84,32 @@ RCT_EXPORT_METHOD(searchByPath:(NSString *)path limitDetection:(NSString *)value
      }];
 };
 
-RCT_EXPORT_METHOD(searchByUri:(NSString *)uri limitDetection:(NSString *)value) {
+RCT_EXPORT_METHOD(searchByUri:(NSString *)uri limitDetection:(NSString *)value page:(nonnull NSNumber *)page filter:(NSDictionary *)params) {
     
+    UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:uri]]];
+    UploadSearchParams *uploadSearchParams = [[UploadSearchParams alloc] init];
+
+    uploadSearchParams.page = [page intValue];
+    uploadSearchParams.limit = 20;
+    
+    uploadSearchParams.fq = [params mutableCopy];
+    
+    uploadSearchParams.imageFile = image;
+    uploadSearchParams.getAllFl = true;
+    uploadSearchParams.detection = value;
+    uploadSearchParams.settings = [ImageSettings defaultSettings];
+    
+    [[ViSearchAPI defaultClient]
+     searchWithImageData:uploadSearchParams
+     success:^(NSInteger statusCode, ViSearchResult *data, NSError *error) {
+         NSMutableArray *metaDataDict = [[NSMutableArray alloc] init];
+         for (ImageResult *result in data.imageResultsArray) {
+             [metaDataDict addObject:result.metadataDictionary];
+         }
+         [self sendEventWithName:[self getEventName]
+                            body:metaDataDict];
+     } failure:^(NSInteger statusCode, ViSearchResult *data, NSError *error) {
+     }];
 };
 
 RCT_EXPORT_METHOD(searchByColor:(NSString *)hexString) {

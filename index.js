@@ -46,12 +46,12 @@ const ReactNativeVisenze = {
      * @param {callback} callback - callback function to be invoked
      * @param {string} limitDetection - limit the image detection = "all", "top", "dress", "bottom", "shoe", "bag", "watch" and "indian ethnic wear". default = "all"
      */
-    searchByUri: function searchByUri(uri, callback, limitDetection = "all") {
+    searchByUri: function searchByUri(uri, callback, limitDetection = "all", page, filter) {
         resultListener = callback;
         new NativeEventEmitter(RNVisenzeBridge).addListener('VisenzeResultEvent', (result) => {
             resultListener(result);
         });
-        RNVisenzeBridge.searchByUri(uri, limitDetection);
+        RNVisenzeBridge.searchByUri(uri, limitDetection, page, filter);
     },
     /**
      * Search using local path of the image 

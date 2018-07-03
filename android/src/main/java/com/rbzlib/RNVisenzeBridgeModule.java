@@ -24,6 +24,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
+import android.util.Log;
+
+import android.util.Base64;
+
 import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
 
 public class RNVisenzeBridgeModule extends ReactContextBaseJavaModule {
@@ -129,18 +136,25 @@ public class RNVisenzeBridgeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void searchByUri(final String uri, final String limitDetection){
+    public void searchByUri(final String uri, final String limitDetection, final int page, final ReadableMap filters){
         UiThreadUtil.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 Image image = new Image(reactContext, Uri.parse(uri), Image.ResizeSettings.STANDARD);
+                // Image image = new Image(bytes, Image.ResizeSettings.STANDARD);
                 BaseSearchParams baseSearchParams = new BaseSearchParams();
                 baseSearchParams.setGetAllFl(true);
+                baseSearchParams.setLimit(20);
+                baseSearchParams.setPage(page);
+                Map<String, String> filterMap = new HashMap(filters.toHashMap());
+                if(filterMap.size()>0){
+                    baseSearchParams.setFq(filterMap);
+                }
                 UploadSearchParams  uploadSearchParams = new UploadSearchParams();
                 uploadSearchParams.setImage(image);
                 uploadSearchParams.setDetection(limitDetection);
                 uploadSearchParams.setBaseSearchParams(baseSearchParams);
-                viSearch.uploadSearch(uploadSearchParams);
+                viSearch.uploadSearch(uploadSearchParams);       
             }
         });
     }
