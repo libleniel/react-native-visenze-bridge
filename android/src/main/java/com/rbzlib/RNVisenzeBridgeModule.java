@@ -19,6 +19,7 @@ import com.visenze.visearch.android.UploadSearchParams;
 import com.visenze.visearch.android.ViSearch;
 import com.visenze.visearch.android.model.Image;
 import com.visenze.visearch.android.model.ImageResult;
+import com.visenze.visearch.android.model.ProductType;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +29,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 import android.util.Log;
+import java.util.Arrays;
 
 import android.util.Base64;
 
@@ -62,10 +64,20 @@ public class RNVisenzeBridgeModule extends ReactContextBaseJavaModule {
                     @Override
                     public void onSearchResult(ResultList resultList) {
                         JSONArray data = new JSONArray();
+                        JSONArray dataImage = new JSONArray();
+                        JSONArray dataProductTypes = new JSONArray();
+                        // Log.d("RNVisenzeBridge---", Arrays.toString(resultList.getProductTypes().toArray()));
+                        for (ProductType type : resultList.getProductTypes()) {
+                            Log.v("tupe", type.getType());
+                            dataProductTypes.put(type.getType());
+                        }
                         for (ImageResult imageResult : resultList.getImageList()) {
                             JSONObject jsonImage = new JSONObject(imageResult.getMetaData());
-                            data.put(jsonImage);
+                            dataImage.put(jsonImage);
                         }
+                        data.put(dataImage);
+                        data.put(dataProductTypes);
+                        Log.d("datavuseb", data.toString());
                         try {
                             RCTNativeAppEventEmitter eventEmitter = getReactApplicationContext().getJSModule(RCTNativeAppEventEmitter.class);
                             eventEmitter.emit(VISENZE_RESULT_EVENT, JsonConvert.jsonToReact(data));
