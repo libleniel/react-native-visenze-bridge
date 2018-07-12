@@ -88,7 +88,7 @@ RCT_EXPORT_METHOD(searchByUri:(NSString *)uri limitDetection:(NSString *)value p
     
     UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:uri]]];
     UploadSearchParams *uploadSearchParams = [[UploadSearchParams alloc] init];
-
+    
     uploadSearchParams.page = [page intValue];
     uploadSearchParams.limit = 20;
     
@@ -103,9 +103,16 @@ RCT_EXPORT_METHOD(searchByUri:(NSString *)uri limitDetection:(NSString *)value p
      searchWithImageData:uploadSearchParams
      success:^(NSInteger statusCode, ViSearchResult *data, NSError *error) {
          NSMutableArray *metaDataDict = [[NSMutableArray alloc] init];
-         for (ImageResult *result in data.imageResultsArray) {
-             [metaDataDict addObject:result.metadataDictionary];
+         NSMutableArray *imageData = [[NSMutableArray alloc] init];
+         NSMutableArray *productTypeData = [[NSMutableArray alloc] init];
+         for (ViSearchProductType *result in data.productTypes) {
+             [productTypeData addObject:result.type];
          }
+         for (ImageResult *result in data.imageResultsArray) {
+             [imageData addObject:result.metadataDictionary];
+         }
+         [metaDataDict addObject:imageData];
+         [metaDataDict addObject:productTypeData];
          [self sendEventWithName:[self getEventName]
                             body:metaDataDict];
      } failure:^(NSInteger statusCode, ViSearchResult *data, NSError *error) {
@@ -139,4 +146,5 @@ RCT_EXPORT_METHOD(trackSearchResultClickEvent:(NSString *)imageName withRequestI
 };
 
 @end
-  
+
+
