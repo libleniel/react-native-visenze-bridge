@@ -106,7 +106,9 @@ RCT_EXPORT_METHOD(searchByUri:(NSString *)uri limitDetection:(NSString *)value p
          NSMutableArray *imageData = [[NSMutableArray alloc] init];
          NSMutableArray *productTypeData = [[NSMutableArray alloc] init];
          for (ViSearchProductType *result in data.productTypes) {
-             [productTypeData addObject:result.type];
+             if (![productTypeData containsObject:result.type]){
+                 [productTypeData addObject:result.type];
+             }
          }
          for (ImageResult *result in data.imageResultsArray) {
              [imageData addObject:result.metadataDictionary];

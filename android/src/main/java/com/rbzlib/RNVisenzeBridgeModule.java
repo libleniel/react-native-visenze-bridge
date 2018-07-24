@@ -58,7 +58,6 @@ public class RNVisenzeBridgeModule extends ReactContextBaseJavaModule {
         UiThreadUtil.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Log.d("RNVisenzeBridge", "start is called");
                 viSearch = new ViSearch.Builder(appkey).build(reactContext);
                 visearchListener = new ViSearch.ResultListener() {
                     @Override
@@ -66,10 +65,10 @@ public class RNVisenzeBridgeModule extends ReactContextBaseJavaModule {
                         JSONArray data = new JSONArray();
                         JSONArray dataImage = new JSONArray();
                         JSONArray dataProductTypes = new JSONArray();
-                        // Log.d("RNVisenzeBridge---", Arrays.toString(resultList.getProductTypes().toArray()));
                         for (ProductType type : resultList.getProductTypes()) {
-                            Log.v("tupe", type.getType());
-                            dataProductTypes.put(type.getType());
+                            if(!isDuplicate(dataProductTypes, type.getType())){
+                                dataProductTypes.put(type.getType());
+                            }
                         }
                         for (ImageResult imageResult : resultList.getImageList()) {
                             JSONObject jsonImage = new JSONObject(imageResult.getMetaData());
@@ -77,7 +76,6 @@ public class RNVisenzeBridgeModule extends ReactContextBaseJavaModule {
                         }
                         data.put(dataImage);
                         data.put(dataProductTypes);
-                        Log.d("datavuseb", data.toString());
                         try {
                             RCTNativeAppEventEmitter eventEmitter = getReactApplicationContext().getJSModule(RCTNativeAppEventEmitter.class);
                             eventEmitter.emit(VISENZE_RESULT_EVENT, JsonConvert.jsonToReact(data));
@@ -88,12 +86,12 @@ public class RNVisenzeBridgeModule extends ReactContextBaseJavaModule {
 
                     @Override
                     public void onSearchError(String errorMessage) {
-                        Log.i(ModuleName, "Search Error");
+                        // Log.i(ModuleName, "Search Error");
                     }
 
                     @Override
                     public void onSearchCanceled() {
-                        Log.i(ModuleName, "Search Canceled");
+                        // Log.i(ModuleName, "Search Canceled");
                     }
                 };
                 viSearch.setListener(visearchListener);
@@ -195,5 +193,14 @@ public class RNVisenzeBridgeModule extends ReactContextBaseJavaModule {
                     .setReqid(requestID));
             }
         });
+    }
+
+    private boolean isDuplicate(JSONArray jsonArray, String myElementToSearch){
+        boolean found = false;
+        for (int i = 0; i < jsonArray.length(); i++)
+        if (jsonArray.getString(i).equals(myElementToSearch)){
+            found = true;
+        }
+        return found;
     }
 }
