@@ -115,6 +115,7 @@ RCT_EXPORT_METHOD(searchByUri:(NSString *)uri limitDetection:(NSString *)value p
          }
          [metaDataDict addObject:imageData];
          [metaDataDict addObject:productTypeData];
+         [metaDataDict addObject:[data.content objectForKey:@"total"]];
          [self sendEventWithName:[self getEventName]
                             body:metaDataDict];
      } failure:^(NSInteger statusCode, ViSearchResult *data, NSError *error) {

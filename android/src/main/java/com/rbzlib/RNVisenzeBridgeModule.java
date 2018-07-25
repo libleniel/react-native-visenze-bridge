@@ -74,8 +74,11 @@ public class RNVisenzeBridgeModule extends ReactContextBaseJavaModule {
                             JSONObject jsonImage = new JSONObject(imageResult.getMetaData());
                             dataImage.put(jsonImage);
                         }
+
                         data.put(dataImage);
                         data.put(dataProductTypes);
+                        data.put(resultList.getTotal());
+
                         try {
                             RCTNativeAppEventEmitter eventEmitter = getReactApplicationContext().getJSModule(RCTNativeAppEventEmitter.class);
                             eventEmitter.emit(VISENZE_RESULT_EVENT, JsonConvert.jsonToReact(data));
@@ -198,7 +201,7 @@ public class RNVisenzeBridgeModule extends ReactContextBaseJavaModule {
     private boolean isDuplicate(JSONArray jsonArray, String myElementToSearch){
         boolean found = false;
         for (int i = 0; i < jsonArray.length(); i++)
-        if (jsonArray.getString(i).equals(myElementToSearch)){
+        if (jsonArray.optString(i).equals(myElementToSearch)){
             found = true;
         }
         return found;
