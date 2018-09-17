@@ -21,7 +21,11 @@ const ReactNativeVisenze = {
      */
     searchById: function searchById(id, callback) {
         resultListener = callback;
-        new NativeEventEmitter(RNVisenzeBridge).addListener('VisenzeResultEvent', (result) => {
+        const eventEmitter  = new NativeEventEmitter(RNVisenzeBridge);
+        if(eventEmitter.listeners.length>0){
+            eventEmitter.removeAllListeners('VisenzeResultEvent');
+        }
+        eventEmitter.addListener('VisenzeResultEvent', (result) => {
             resultListener(result);
         });
         RNVisenzeBridge.searchById(id);
@@ -35,7 +39,11 @@ const ReactNativeVisenze = {
      */
     searchByUrl: function searchByUrl(url, callback, limitDetection = "all") {
         resultListener = callback;
-        new NativeEventEmitter(RNVisenzeBridge).addListener('VisenzeResultEvent', (result) => {
+        const eventEmitter  = new NativeEventEmitter(RNVisenzeBridge);
+        if(eventEmitter.listeners.length>0){
+            eventEmitter.removeAllListeners('VisenzeResultEvent');
+        }
+        eventEmitter.addListener('VisenzeResultEvent', (result) => {
             resultListener(result);
         });
         RNVisenzeBridge.searchByUrl(url, limitDetection);
@@ -65,7 +73,11 @@ const ReactNativeVisenze = {
      */
     searchByPath: function searchByPath(path, callback, limitDetection = "all") {
         resultListener = callback;
-        new NativeEventEmitter(RNVisenzeBridge).addListener('VisenzeResultEvent', (result) => {
+        const eventEmitter  = new NativeEventEmitter(RNVisenzeBridge);
+        if(eventEmitter.listeners.length>0){
+            eventEmitter.removeAllListeners('VisenzeResultEvent');
+        }
+        eventEmitter.addListener('VisenzeResultEvent', (result) => {
             resultListener(result);
         });
         RNVisenzeBridge.searchByPath(path, limitDetection);
@@ -77,7 +89,11 @@ const ReactNativeVisenze = {
      */
     searchByColor: function searchByColor(hexString, callback) {
         resultListener = callback;
-        new NativeEventEmitter(RNVisenzeBridge).addListener('VisenzeResultEvent', (result) => {
+        const eventEmitter  = new NativeEventEmitter(RNVisenzeBridge);
+        if(eventEmitter.listeners.length>0){
+            eventEmitter.removeAllListeners('VisenzeResultEvent');
+        }
+        eventEmitter.addListener('VisenzeResultEvent', (result) => {
             resultListener(result);
         });
         RNVisenzeBridge.searchByColor(hexString);
