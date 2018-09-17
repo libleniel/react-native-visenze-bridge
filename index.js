@@ -48,7 +48,11 @@ const ReactNativeVisenze = {
      */
     searchByUri: function searchByUri(uri, callback, limitDetection = "all", page, filter) {
         resultListener = callback;
-        new NativeEventEmitter(RNVisenzeBridge).addListener('VisenzeResultEvent', (result) => {
+        const eventEmitter  = new NativeEventEmitter(RNVisenzeBridge);
+        if(eventEmitter.listeners.length>0){
+            eventEmitter.removeAllListeners('VisenzeResultEvent');
+        }
+        eventEmitter.addListener('VisenzeResultEvent', (result) => {
             resultListener(result);
         });
         RNVisenzeBridge.searchByUri(uri, limitDetection, page, filter);
