@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
 
   s.authors      = package['author']
   s.homepage     = package['homepage']
-  s.platforms    = :ios, '9.0'
+  s.platform     = :ios, '9.0'
 
   s.requires_arc = true
   s.source       = { :git => "https://github.com/libleniel/react-native-visenze-bridge.git", :tag => "v#{s.version}" }
