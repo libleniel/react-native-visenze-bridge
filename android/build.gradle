@@ -32,7 +32,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.facebook.react:react-native:+'
-    compile 'com.visenze:visearch-android:1.2.1'
+    implementation 'com.facebook.react:react-native:+'
+    implementation 'com.visenze:visearch-android:1.2.1'
 }
   
